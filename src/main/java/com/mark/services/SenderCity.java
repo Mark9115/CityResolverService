@@ -10,7 +10,7 @@ public class SenderCity {
     public void sendMessage(City city){
         RestTemplate restTemplate = new RestTemplate();
 
-        String resourceUrl = "http://localhost:8080/testService/cityresp";
+        String resourceUrl = "https://testmainservice.herokuapp.com/cityresp";
         HttpEntity<City> request = new HttpEntity<>(city);
         String productCreateResponse = restTemplate.postForObject(resourceUrl, request, String.class);
 
