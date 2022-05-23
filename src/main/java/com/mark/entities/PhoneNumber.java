@@ -7,6 +7,6 @@ import lombok.Setter;
 @NoArgsConstructor
 @Getter
 @Setter
-public class Number {
+public class PhoneNumber {
     String number;
 }

@@ -4,7 +4,9 @@ import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.mark.entities.City;
-import com.mark.entities.Number;
+import com.mark.entities.PhoneNumber;
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.context.annotation.PropertySource;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
@@ -15,8 +17,14 @@ import java.util.Arrays;
 import java.util.List;
 
 @Service
+@PropertySource("classpath:values.properties")
 public class CityResolver {
-    public City getCity(Number number) {
+    @Value("${properties.Token}")
+    private String token;
+    @Value("${properties.Secret}")
+    private String secret;
+
+    public City getCity(PhoneNumber phoneNumber) {
         City city = new City();
         RestTemplate restTemplate = new RestTemplate();
 
@@ -24,10 +32,11 @@ public class CityResolver {
 
         HttpHeaders headers = new HttpHeaders();
         headers.setContentType(MediaType.APPLICATION_JSON);
-        headers.set("Authorization", "Token  dbe6c2317370af881cab878481241c68894bd52e");
-        headers.set("X-Secret", "b9634f6938e4e8d040cac2a1360e20dc13b1791d");
-        String phoneNumber = number.getNumber();
-        ResponseEntity<String> responseEntity = ResponseEntity.ok().headers(headers).body("[\"" + phoneNumber + "\"]");
+        headers.set("Authorization", token);
+        headers.set("X-Secret", secret);
+
+        String number = phoneNumber.getNumber();
+        ResponseEntity<String> responseEntity = ResponseEntity.ok().headers(headers).body("[\"" + number + "\"]");
         ResponseEntity<String> response = restTemplate.postForEntity(resourceUrl, responseEntity, String.class);
 
         String needToParseCity;
